@@ -1,0 +1,114 @@
+body {
+    color: #C8C8C8;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+div.button {
+    height: 50px;
+    width: 50px;
+    border-radius: 4px;
+    border: 4px solid #EFEFEF;
+    background-color: #FFFFFF;
+    margin: 4px;
+    vertical-align: top;
+    cursor: pointer;
+    transition-property: background-color;
+    transition-duration: 500ms;
+    transition-timing-function: linear;
+    transition-delay: 0s;
+}
+
+h4 {
+    margin: 40px 0px 40px 0px;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+div.button.on {
+    
+}
+
+.shadow {
+  -moz-box-shadow:    0px 2px 30px 5px #eee;
+  -webkit-box-shadow: 0px 2px 30px 5px #eee;
+  box-shadow:         0px 2px 30px 5px #eee;
+}
+
+div.left {
+    float: left;
+    margin-left: 75px;
+}
+
+div.right {
+    float: right;
+    margin-right: 75px;
+}
+
+div.octave {
+    width: 275px;
+    margin: 10px;
+    padding: 6px 0px 6px 0px;  
+    -webkit-transition-property: -webkit-transform, background-color;
+    -moz-transition-property: -moz-transform;
+    -ms-transition-property: -ms-transform;
+    -o-transition-property: -o-transform;
+    transition-property: transform;
+    transition-duration: 50ms;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+    -webkit-transform: scale(1.0) rotate(0deg) translateY(0px);
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform: scale(1.0) rotate(0deg) translateY(0px);
+    -moz-transform-origin: 50% 50%;
+    -o-transform: scale(1.0) rotate(0deg) translateY(0px);
+    -o-transform-origin: 50% 50%;
+    -ms-transform: scale(1.0) rotate(0deg) translateY(0px);
+    -ms-transform-origin: 50% 50%;
+    transform: scale(1.0) rotate(0deg) translateY(0px);
+    transform-origin: 50% 50%;
+}
+
+div.tilt-left {
+    -webkit-transform: scale(1.0) rotate(4deg) translateY(0px);
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform: scale(1.0) rotate(4deg) translateY(0px);
+    -moz-transform-origin: 50% 50%;
+    -o-transform: scale(1.0) rotate(4deg) translateY(0px);
+    -o-transform-origin: 50% 50%;
+    -ms-transform: scale(1.0) rotate(4deg) translateY(0px);
+    -ms-transform-origin: 50% 50%;
+    transform: scale(1.0) rotate(4deg) translateY(0px);
+    transform-origin: 50% 50%;
+    border: 2px solid #C8C8C8;
+}
+
+div.tilt-right {
+    -webkit-transform: scale(1.0) rotate(-4deg) translateY(0px);
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform: scale(1.0) rotate(-4deg) translateY(0px);
+    -moz-transform-origin: 50% 50%;
+    -o-transform: scale(1.0) rotate(-4deg) translateY(0px);
+    -o-transform-origin: 50% 50%;
+    -ms-transform: scale(1.0) rotate(-4deg) translateY(0px);
+    -ms-transform-origin: 50% 50%;
+    transform: scale(1.0) rotate(-4deg) translateY(0px);
+    transform-origin: 50% 50%;
+    border: 2px solid #C8C8C8;
+}
+
+div.config {
+    padding: 10px 0px 30px 0px;
+    text-align: right;
+    display: inline-block;
+}
+
+div.octave > div {
+    display: inline-block;
+}
+
+body {
+    text-align: center;
+}
+
