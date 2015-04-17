@@ -26,12 +26,10 @@ require.config({
     }
 });
 
-require(['react', 'jsx!components/Timer'], function(React, Timer) {
-    var start = new Date();
-    Timer = React.createFactory(Timer);
-
+require(['react', 'jsx!components/osc'], function(React, osc) {
+    var Osc = React.createFactory(osc);
     React.render(
-        Timer({start: start}),
+        Osc(),
         document.getElementById('js-app-container'));
 });
 
