@@ -1,70 +1,48 @@
-// http://tylermcginnis.com/reactjs-tutorial-pt-2-building-react-applications-with-gulp-and-browserify/
+var gulp = require("gulp");
+var browserify = require("gulp-browserify");
+var sass = require("gulp-sass");
+var rename = require("gulp-rename");
+var livereload = require("gulp-livereload");
 
-var gulp = require('gulp');
-var uglify = require('gulp-uglify');
-var htmlreplace = require('gulp-html-replace');
-var source = require('vinyl-source-stream');
-var browserify = require('browserify');
-var watchify = require('watchify');
-var reactify = require('reactify');
-var streamify = require('gulp-streamify');
-
-var path = {
-  HTML: 'src/index.html',
-  MINIFIED_OUT: 'build.min.js',
-  OUT: 'build.js',
-  DEST: 'dist',
-  DEST_BUILD: 'dist/build',
-  DEST_SRC: 'dist/src',
-  ENTRY_POINT: './src/js/App.js'
+var paths = {
+  scripts: ["src/js/**/*.js", "src/js/**/*.jsx"],
+  sass: ["src/sass/**/*.scss"],
+  static: ["src/index.html"]
 };
 
-gulp.task('copy', function(){
-  gulp.src(path.HTML)
-    .pipe(gulp.dest(path.DEST));
+gulp.task("browserify", function() {
+	gulp.src("src/js/app.jsx")
+		.pipe(browserify({
+			transform: ["reactify"],
+			extensions: [".jsx"]
+		}))
+		.pipe(rename("app.js"))
+		.pipe(gulp.dest("www/js"))
+		.pipe(livereload());
 });
 
-gulp.task('watch', function() {
-  gulp.watch(path.HTML, ['copy']);
-
-  var watcher  = watchify(browserify({
-    entries: [path.ENTRY_POINT],
-    transform: [reactify],
-    debug: true,
-    cache: {}, packageCache: {}, fullPaths: true
-  }));
-
-  return watcher.on('update', function () {
-    watcher.bundle()
-      .pipe(source(path.OUT))
-      .pipe(gulp.dest(path.DEST_SRC))
-      console.log('Updated');
-  })
-    .bundle()
-    .pipe(source(path.OUT))
-    .pipe(gulp.dest(path.DEST_SRC));
+gulp.task("sass", function() {
+	gulp.src("src/sass/**/*.scss")
+		.pipe(sass({
+			outputStyle: "compressed",
+			souceComments: "map",
+			includePaths: "./sass"
+		}))
+		.pipe(gulp.dest("www/css"))
+		.pipe(livereload());
 });
 
-gulp.task('build', function(){
-  browserify({
-    entries: [path.ENTRY_POINT],
-    transform: [reactify],
-  })
-    .bundle()
-    .pipe(source(path.MINIFIED_OUT))
-    .pipe(streamify(uglify(path.MINIFIED_OUT)))
-    .pipe(gulp.dest(path.DEST_BUILD));
+gulp.task("copy-static", function() {
+	gulp.src("src/index.html")
+		.pipe(gulp.dest("www"))
+		.pipe(livereload());
 });
 
-gulp.task('replaceHTML', function(){
-  gulp.src(path.HTML)
-    .pipe(htmlreplace({
-      'js': 'build/' + path.MINIFIED_OUT
-    }))
-    .pipe(gulp.dest(path.DEST));
+gulp.task("watch", function() {
+	livereload.listen();
+	gulp.watch(paths.scripts, ["browserify"]);
+	gulp.watch(paths.sass, ["sass"]);
+	gulp.watch(paths.static, ["copy-static"]);
 });
 
-gulp.task('production', ['replaceHTML', 'build']);
-
-gulp.task('default', ['watch']);
-
+gulp.task("default", ["browserify", "sass", "copy-static"]);
