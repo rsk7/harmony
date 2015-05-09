@@ -30703,6 +30703,23 @@ module.exports = require('./lib/React');
 
 },{}],159:[function(require,module,exports){
 var React = require("react");
+var OctaveBoard = require("./octaveboard.jsx");
+
+var Board = React.createClass({displayName: "Board",
+	render: function() {
+		return (
+			React.createElement("div", null, 
+				React.createElement(OctaveBoard, null), 
+				React.createElement(OctaveBoard, null)
+			)
+		);
+	}
+});
+
+module.exports = Board;
+
+},{"./octaveboard.jsx":161,"react":157}],160:[function(require,module,exports){
+var React = require("react");
 
 var Button = React.createClass({displayName: "Button",
     getDefaultProps: function() {
@@ -30765,7 +30782,7 @@ var Button = React.createClass({displayName: "Button",
 
 module.exports = Button;
 
-},{"react":157}],160:[function(require,module,exports){
+},{"react":157}],161:[function(require,module,exports){
 var _ = require("underscore");
 var React = require("react");
 var Button = require("./button.jsx");
@@ -30823,7 +30840,7 @@ module.exports = OctaveBoard;
 
 
 
-},{"../data/notenameoctavefrequency.js":161,"./button.jsx":159,"react":157,"underscore":158}],161:[function(require,module,exports){
+},{"../data/notenameoctavefrequency.js":162,"./button.jsx":160,"react":157,"underscore":158}],162:[function(require,module,exports){
 var _ = require("underscore");
 
 var data = [
@@ -30967,15 +30984,14 @@ var api = {
 module.exports = api;
 
 
-},{"underscore":158}],162:[function(require,module,exports){
+},{"underscore":158}],163:[function(require,module,exports){
 var $ = require("jquery");
 var React = require("react");
 var Osc = require("./osc.jsx");
-var Button = require("./Board/button.jsx");
-var OctaveBoard = require("./Board/octaveboard.jsx");
+var Board = require("./Board/board.jsx");
 
 $(function() {
-    React.render(React.createElement(OctaveBoard, null), document.getElementById("harmony"));
+    React.render(React.createElement(Board, null), document.getElementById("harmony"));
 });
 
 
@@ -30983,7 +30999,7 @@ $(function() {
 
 
 
-},{"./Board/button.jsx":159,"./Board/octaveboard.jsx":160,"./osc.jsx":163,"jquery":2,"react":157}],163:[function(require,module,exports){
+},{"./Board/board.jsx":159,"./osc.jsx":164,"jquery":2,"react":157}],164:[function(require,module,exports){
 var React = require("react");
 var Sound = require("./sound");
 
@@ -31066,7 +31082,7 @@ var Osc = React.createClass({displayName: "Osc",
 
 module.exports = Osc;
 
-},{"./sound":164,"react":157}],164:[function(require,module,exports){
+},{"./sound":165,"react":157}],165:[function(require,module,exports){
 var soundContext = (function(){
     if(typeof window.AudioContext === 'function') {
         return new window.AudioContext();
@@ -31141,4 +31157,4 @@ module.exports = sound;
 
 
 
-},{}]},{},[162])
+},{}]},{},[163])

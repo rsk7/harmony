@@ -49,11 +49,12 @@
 		margin: 4px;
 		cursor: pointer;
 		padding: 10px;
+		position: relative;
+		text-align: left;
 		transition-property: background-color;
 		transition-duration: 10ms;
 		transition-timing-function: linear;
 		transition-delay: 0s;
-		position: relative;
 
 		.noteName {
 			display: inline-block;
@@ -77,15 +78,10 @@
 
 .board {
 	display: inline-block;
+	white-space: normal;
 	width: 344px;
-	margin-top: 10px;
-	margin-right: 10px;
-	margin-bottom: 10px;
-	margin-left: 10px;
-	padding-top: 10px;
-	padding-right: 10px;
-	padding-bottom: 10px;
-	padding-left: 10px;
+	margin: 30px;
+	padding: 10px;
 	text-align: center;
 
 	.configuration {
@@ -112,4 +108,13 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	color: #C8C8C8;
 	font-weight: normal;
+}
+
+#harmony {
+	position: absolute;
+	white-space: nowrap;
+	top: 45%;
+	left: 50%;
+	margin-right: 50%;
+	transform: translate(-50%, -50%);
 }
