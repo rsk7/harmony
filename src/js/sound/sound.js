@@ -10,8 +10,8 @@ var soundContext = (function(){
 
 var sound = function(){
     this.attackTime = 0.1;
-    this.releaseTime = 0.5;
-    this.amplitude = 1;
+    this.releaseTime = 0.1;
+    this.amplitude = 0.10;
     this.vco = soundContext.createOscillator();
     this.vca = soundContext.createGain();
     this.vca.gain.value = 0;

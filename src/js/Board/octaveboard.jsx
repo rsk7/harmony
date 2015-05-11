@@ -1,7 +1,7 @@
 var _ = require("underscore");
 var React = require("react");
 var Button = require("./button.jsx");
-var NoteData = require("../data/notenameoctavefrequency.js");
+var NoteData = require("../data/notedata.js");
 
 var OctaveBoard = React.createClass({
     getDefaultProps: function() {
