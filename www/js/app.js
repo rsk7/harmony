@@ -33930,12 +33930,14 @@ var Button = React.createClass({displayName: "Button",
         if(this.props.on) {
             return {
                 backgroundColor: this.props.onColor,
-                color: this.props.onTextColor
+                color: this.props.onTextColor,
+                borderColor: this.props.onColor
             };
         } else {
             return {
                 backgroundColor: this.props.offColor,
-                color: this.props.offTextColor
+                color: this.props.offTextColor,
+                borderColor: "#EFEFEF"
             };
         }
     },
