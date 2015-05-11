@@ -33864,24 +33864,43 @@ module.exports = require('./lib/React');
 
 
 },{}],161:[function(require,module,exports){
-var React = require("react");
+var React       = require("react");
+var Harmony     = require("../harmony.js");
 var OctaveBoard = require("./octaveboard.jsx");
 
 var Board = React.createClass({displayName: "Board",
+	getInitialState: function() {
+		return Harmony.positions;
+	},
+
+	// listeners
+	componentDidMount: function() {
+		Harmony.addChangeListener(this._onChange);
+	},
+
+	componentWillUnmount: function() {
+		Harmony.removeChangeListener(this._onChange);
+	},
+
 	render: function() {
 		return (
 			React.createElement("div", null, 
-				React.createElement(OctaveBoard, null), 
-				React.createElement(OctaveBoard, null)
+				React.createElement(OctaveBoard, {octave: this.state.left}), 
+				React.createElement(OctaveBoard, {octave: this.state.right})
 			)
 		);
+	},
+
+	_onChange: function() {
+		this.setState(Harmony.positions);
 	}
 });
 
 module.exports = Board;
 
-},{"./octaveboard.jsx":163,"react":159}],162:[function(require,module,exports){
+},{"../harmony.js":168,"./octaveboard.jsx":163,"react":159}],162:[function(require,module,exports){
 var React = require("react");
+var Harmony = require("../harmony.js");
 
 var Button = React.createClass({displayName: "Button",
     getDefaultProps: function() {
@@ -33891,30 +33910,30 @@ var Button = React.createClass({displayName: "Button",
             noteName: "?",
             keyBinding: "?",
             octaveNumber: "?",
-            textColor: "#C8C8C8"
-        };
-    },
-
-    getInitialState: function() {
-        return {
+            offTextColor: "#C8C8C8",
+            onTextColor: "#FFFFFF",
             on: false
         };
     },
 
-    toggle: function() {
-        this.setState({ on: !this.state.on});
+    press: function() {
+        Harmony.playByKey(this.props.keyBinding);
+    },
+
+    release: function() {
+        Harmony.stopByKey(this.props.keyBinding);
     },
 
     getStyles: function() {
-        if(this.state.on) {
+        if(this.props.on) {
             return {
                 backgroundColor: this.props.onColor,
-                color: this.props.textColor
+                color: this.props.onTextColor
             };
         } else {
             return {
                 backgroundColor: this.props.offColor,
-                color: this.props.textColor
+                color: this.props.offTextColor
             };
         }
     },
@@ -33922,10 +33941,10 @@ var Button = React.createClass({displayName: "Button",
     render: function() {
         return (
             React.createElement("div", {className: "button", 
-                onMouseDown: this.toggle, 
-                onMouseUp: this.toggle, 
-                onTouchStart: this.toggle, 
-                onTouchEnd: this.toggle}, 
+                onMouseDown: this.press, 
+                onMouseUp: this.release, 
+                onTouchStart: this.press, 
+                onTouchEnd: this.release}, 
                 React.createElement("div", {className: "display", style: this.getStyles()}, 
                     React.createElement("span", {className: "noteName"}, 
                         this.props.noteName
@@ -33944,38 +33963,16 @@ var Button = React.createClass({displayName: "Button",
 
 module.exports = Button;
 
-},{"react":159}],163:[function(require,module,exports){
-var _ = require("underscore");
-var React = require("react");
-var Button = require("./button.jsx");
+},{"../harmony.js":168,"react":159}],163:[function(require,module,exports){
+var _        = require("underscore");
+var React    = require("react");
+var Button   = require("./button.jsx");
 var NoteData = require("../data/notedata.js");
 
 var OctaveBoard = React.createClass({displayName: "OctaveBoard",
-    getDefaultProps: function() {
-        return {
-            waveTypes: ["sine", "square", "sawtooth", "triangle"]
-        };
-    },
-
-    getInitialState: function() {
-        return {
-            buttonData: _.map(NoteData.get({octave: 3}), function(datum){
-                return {
-                    noteName: datum.name,
-                    octaveNumber: datum.octave
-                };
-            })
-        };
-    },
-
     render: function() {
-        var waveselection = this.props.waveTypes.map(function(waveType) {
-            return (
-                React.createElement("option", {value: "{waveType}"}, waveType)
-            );
-        });
-
-        var buttons = this.state.buttonData.map(function(buttonProps) {
+        var buttons = this.props.octave.map(function(note) {
+            var buttonProps = note.getState();
             return (
                 React.createElement(Button, React.__spread({},  buttonProps))
             );
@@ -33985,12 +33982,6 @@ var OctaveBoard = React.createClass({displayName: "OctaveBoard",
             React.createElement("div", {className: "board shadow"}, 
                 React.createElement("div", {className: "octaveBoard"}, 
                     buttons
-                ), 
-                React.createElement("div", {className: "configuration"}, 
-                    React.createElement("label", {for: "waveType"}, "Wave"), 
-                    React.createElement("select", {name: "waveType"}, 
-                        waveselection
-                    )
                 )
             )
         );
@@ -34123,6 +34114,7 @@ module.exports = {
 
 
 },{}],165:[function(require,module,exports){
+// TODO: "displayName" ?? should not need this
 var note_char_binding = {
     
     left : [
@@ -34151,12 +34143,12 @@ var note_char_binding = {
         { note : 'E',  character : 'j' },
         { note : 'F',  character : 'k' },
         { note : 'F#', character : 'l' },
-        { note : 'G',  character : 'semi_colon' },
+        { note : 'G',  character : 'semi_colon', displayName: ';' },
 
         { note : 'G#', character : 'n' },
         { note : 'A',  character : 'm' },
-        { note : 'A#', character : 'comma' },
-        { note : 'B',  character : 'period' }
+        { note : 'A#', character : 'comma', displayName: ',' },
+        { note : 'B',  character : 'period', displayName: '.' }
     ]
 };
 
@@ -34358,16 +34350,16 @@ module.exports = api;
 },{"underscore":160}],167:[function(require,module,exports){
 var $        = require("jquery");
 var React    = require("react");
-var Harmony  = require("./harmony.js");
 var Keyboard = require("./keyboard.js");
 var Board    = require("./Board/board.jsx");
+var Harmony  = require("./harmony.js");
 
 var initialize = function() {
-	var harmony = new Harmony();
-	var keyboard = new Keyboard(harmony);
 	React.render(React.createElement(Board, null), document.getElementById("harmony"));
-	keyboard.setup($(window));
-	window.harmony = harmony;
+	Keyboard.setup($(window));
+
+	// for fun
+	window.harmony = Harmony;
 };
 
 $(initialize);
@@ -34380,12 +34372,16 @@ $(initialize);
 },{"./Board/board.jsx":161,"./harmony.js":168,"./keyboard.js":169,"jquery":4,"react":159}],168:[function(require,module,exports){
 var _ = require("underscore");
 var Notes = require("./sound/notes.js");
+var NoteCharBindingData = require("./data/notecharbindingdata.js");
 
 // music synth (not a synth yet!)
 var Harmony = function() {
+	// there's another binding, so just picking the first one for now
+	this.keyBindings = NoteCharBindingData.typeA;
+
 	this.positions = {
-		"left" : Notes.createOctave(3),
-		"right": Notes.createOctave(4)
+		"left" : Notes.createOctave(3, this.keyBindings.left),
+		"right": Notes.createOctave(4, this.keyBindings.right)
 	};
 
 	this.allPositions = [this.positions.left, this.positions.right];
@@ -34395,12 +34391,37 @@ Harmony.prototype.getNote = function(noteName, position) {
 	return this.positions[position].findWhere({note: noteName});
 };
 
+// bit of hack because of the data model
+Harmony.prototype.getNoteNameByKey = function(keyName) {
+	var noteChar = _.findWhere(this.keyBindings.left, {character: keyName});
+	noteChar = noteChar || _.findWhere(this.keyBindings.left, {displayName: keyName});
+	var position = "left";
+	if(noteChar === undefined) {
+		noteChar = _.findWhere(this.keyBindings.right, {character: keyName});
+		noteChar = noteChar || _.findWhere(this.keyBindings.right, {displayName: keyName});
+		position = "right";
+	}
+	return {noteName: noteChar.note, position: position};
+};
+
 Harmony.prototype.play = function(noteName, position) {
 	this.getNote(noteName, position).play();
+	this.signalChange();
+};
+
+Harmony.prototype.playByKey = function(keyName) {
+	var noteData = this.getNoteNameByKey(keyName);
+	this.play(noteData.noteName, noteData.position);
 };
 
 Harmony.prototype.stop = function(noteName, position) {
 	this.getNote(noteName, position).stop();
+	this.signalChange();
+};
+
+Harmony.prototype.stopByKey = function(keyName) {
+	var noteData = this.getNoteNameByKey(keyName);
+	this.stop(noteData.noteName, noteData.position);
 };
 
 Harmony.prototype.setGain = function(gain) {
@@ -34441,23 +34462,31 @@ Harmony.prototype.switchOctaveDown = function(position) {
 	this.positions[position].switchOctaveDown();
 };
 
-module.exports = Harmony;
+
+// ????
+// yup, just one
+Harmony.prototype.addChangeListener = function(callback) {
+	this.signalChange = callback;
+};
+
+Harmony.prototype.removeChangeListener = function(callback) {
+	this.signalChange = null;	
+};
+
+module.exports = new Harmony;
 
 
 
 
-},{"./sound/notes.js":171,"underscore":160}],169:[function(require,module,exports){
+},{"./data/notecharbindingdata.js":165,"./sound/notes.js":171,"underscore":160}],169:[function(require,module,exports){
 var _ = require("underscore");
 var $ = require("jquery");
 var KeyCodeData = require("./data/keycodedata.js");
 var NoteCharBindingData = require("./data/notecharbindingdata.js");
+var Harmony = require("./harmony.js");
 
-var Keyboard = function(harmony) {
-	this.harmony = harmony;
-
-	// there's another binding, so just picking
-	// the first one for now
-	this.binding = NoteCharBindingData.typeA;
+var Keyboard = function() {
+	this.binding = Harmony.keyBindings;
 };
 
 var searchNote = function(binding, character) {
@@ -34482,7 +34511,7 @@ Keyboard.prototype.notePressHandler = function(event) {
 	var character = KeyCodeData.KeyNumberName[event.which];
 	var notePosition = searchNote(this.binding, character);
 	if(notePosition !== undefined) {
-		this.harmony.play(notePosition.noteName, notePosition.position);
+		Harmony.play(notePosition.noteName, notePosition.position);
 	}
 };
 
@@ -34490,7 +34519,7 @@ Keyboard.prototype.noteReleaseHandler = function(event) {
 	var character = KeyCodeData.KeyNumberName[event.which];
 	var notePosition = searchNote(this.binding, character);
 	if(notePosition !== undefined) {
-		this.harmony.stop(notePosition.noteName, notePosition.position);
+		Harmony.stop(notePosition.noteName, notePosition.position);
 	}
 };
 
@@ -34498,13 +34527,13 @@ Keyboard.prototype.noteReleaseHandler = function(event) {
 Keyboard.prototype.octaveSwitchHandler = function(event) {
 	var character = KeyCodeData.KeyNumberName[event.which];
 	if(event.shiftKey && character === "g") {
-		this.harmony.switchOctaveUp("left");
+		Harmony.switchOctaveUp("left");
 	} else if(character === "g") {
-		this.harmony.switchOctaveDown("left");
+		Harmony.switchOctaveDown("left");
 	} else if(event.shiftKey && character === "h") {
-		this.harmony.switchOctaveUp("right");
+		Harmony.switchOctaveUp("right");
 	} else if(character === "h") {
-		this.harmony.switchOctaveDown("right");
+		Harmony.switchOctaveDown("right");
 	}
 };
 
@@ -34514,27 +34543,46 @@ Keyboard.prototype.setup = function(listenToThis) {
 	listenToThis.on("keydown", _.bind(this.octaveSwitchHandler, this));
 };
 
-module.exports = Keyboard;
+module.exports = new Keyboard;
 
-},{"./data/keycodedata.js":164,"./data/notecharbindingdata.js":165,"jquery":4,"underscore":160}],170:[function(require,module,exports){
-var Backbone  = require("backbone");
-var Sound     = require("./sound.js");
-var WaveTypes = ["sine", "sawtooth", "triangle", "square"];
+},{"./data/keycodedata.js":164,"./data/notecharbindingdata.js":165,"./harmony.js":168,"jquery":4,"underscore":160}],170:[function(require,module,exports){
+var _				= require("underscore");
+var Backbone        = require("backbone");
+var Sound           = require("./sound.js");
+var WaveTypes       = ["sine", "sawtooth", "triangle", "square"];
 
 var zeroToOne = function(value) {
 	return (value < 0) ? 0 : (value > 1) ? 1 : value;
 };
 
+var keyBindingFinder = function(keyBinding, noteName) {
+	return _.findWhere(keyBinding, {note: noteName});
+};
+
 var Note = Backbone.Model.extend({
 	defaults: {
-		note: null,
-		freq: null,
-		octv: null,
-		on  : false
+		note 		: null,
+		freq		: null,
+		octv 		: null,
+		on  		: false,
+		keyBinding  : null,
+		onColor		: "#E0E0E0",
+		offColor	: "#FFFFFF",
+
+		// this is the left or right data set for keybinding
+		keyBindings    : null
 	},
 
 	initialize: function() {
 		this.sound = new Sound();
+		this.listenTo(this, "change:note", this.updateBinding);
+		this.updateBinding();
+	},
+
+	updateBinding: function() {
+		var keyBindings = this.get("keyBindings");
+		var keyBinding = _.findWhere(keyBindings, {note: this.get("note")});
+		this.set("keyBinding", keyBinding.displayName || keyBinding.character);
 	},
 
 	setWaveType: function(waveType) {
@@ -34569,6 +34617,17 @@ var Note = Backbone.Model.extend({
 			this.set("on", false);
 			this.sound.stop();
 		}
+	},
+
+	getState: function() {
+		return {
+			offColor     : this.get("offColor"),
+			onColor 	 : this.get("onColor"),
+			noteName	 : this.get("note"),
+			keyBinding   : this.get("keyBinding"),
+			octaveNumber : this.get("octv"),
+			on           : this.get("on")
+		}
 	}
 }, {
 	WaveTypes: WaveTypes
@@ -34581,7 +34640,7 @@ module.exports = Note;
 
 
 
-},{"./sound.js":172,"backbone":1}],171:[function(require,module,exports){
+},{"./sound.js":172,"backbone":1,"underscore":160}],171:[function(require,module,exports){
 var _        = require("underscore");
 var Backbone = require("backbone");
 var Note     = require("./note.js");
@@ -34590,7 +34649,7 @@ var NoteData = require("../data/notedata.js");
 var Notes = Backbone.Collection.extend({
 	model: Note,
 
-	createOctave: function(octave) {
+	createOctave: function(octave, keyBindings, keyBindingName) {
 		this.octave = octave;
 		var noteData = NoteData.get({octave: octave});
 		this.reset();
@@ -34598,7 +34657,8 @@ var Notes = Backbone.Collection.extend({
 			this.add({
 				note: data.name,
 				octv: data.octave,
-				freq: data.frequency
+				freq: data.frequency,
+				keyBindings: keyBindings
 			});
 		}, this);
 	},
@@ -34656,9 +34716,9 @@ var Notes = Backbone.Collection.extend({
 		}
 	}
 }, {
-	createOctave: function(octave) {
+	createOctave: function(octave, keyBindings) {
 		var notes = new Notes();
-		notes.createOctave(octave);
+		notes.createOctave(octave, keyBindings);
 		return notes;
 	}
 });

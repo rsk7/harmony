@@ -6,7 +6,7 @@ var NoteData = require("../data/notedata.js");
 var Notes = Backbone.Collection.extend({
 	model: Note,
 
-	createOctave: function(octave) {
+	createOctave: function(octave, keyBindings, keyBindingName) {
 		this.octave = octave;
 		var noteData = NoteData.get({octave: octave});
 		this.reset();
@@ -14,7 +14,8 @@ var Notes = Backbone.Collection.extend({
 			this.add({
 				note: data.name,
 				octv: data.octave,
-				freq: data.frequency
+				freq: data.frequency,
+				keyBindings: keyBindings
 			});
 		}, this);
 	},
@@ -72,9 +73,9 @@ var Notes = Backbone.Collection.extend({
 		}
 	}
 }, {
-	createOctave: function(octave) {
+	createOctave: function(octave, keyBindings) {
 		var notes = new Notes();
-		notes.createOctave(octave);
+		notes.createOctave(octave, keyBindings);
 		return notes;
 	}
 });

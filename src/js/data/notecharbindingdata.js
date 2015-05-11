@@ -1,3 +1,4 @@
+// TODO: "displayName" ?? should not need this
 var note_char_binding = {
     
     left : [
@@ -26,12 +27,12 @@ var note_char_binding = {
         { note : 'E',  character : 'j' },
         { note : 'F',  character : 'k' },
         { note : 'F#', character : 'l' },
-        { note : 'G',  character : 'semi_colon' },
+        { note : 'G',  character : 'semi_colon', displayName: ';' },
 
         { note : 'G#', character : 'n' },
         { note : 'A',  character : 'm' },
-        { note : 'A#', character : 'comma' },
-        { note : 'B',  character : 'period' }
+        { note : 'A#', character : 'comma', displayName: ',' },
+        { note : 'B',  character : 'period', displayName: '.' }
     ]
 };
 

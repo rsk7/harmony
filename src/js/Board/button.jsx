@@ -1,4 +1,5 @@
 var React = require("react");
+var Harmony = require("../harmony.js");
 
 var Button = React.createClass({
     getDefaultProps: function() {
@@ -8,30 +9,30 @@ var Button = React.createClass({
             noteName: "?",
             keyBinding: "?",
             octaveNumber: "?",
-            textColor: "#C8C8C8"
-        };
-    },
-
-    getInitialState: function() {
-        return {
+            offTextColor: "#C8C8C8",
+            onTextColor: "#FFFFFF",
             on: false
         };
     },
 
-    toggle: function() {
-        this.setState({ on: !this.state.on});
+    press: function() {
+        Harmony.playByKey(this.props.keyBinding);
+    },
+
+    release: function() {
+        Harmony.stopByKey(this.props.keyBinding);
     },
 
     getStyles: function() {
-        if(this.state.on) {
+        if(this.props.on) {
             return {
                 backgroundColor: this.props.onColor,
-                color: this.props.textColor
+                color: this.props.onTextColor
             };
         } else {
             return {
                 backgroundColor: this.props.offColor,
-                color: this.props.textColor
+                color: this.props.offTextColor
             };
         }
     },
@@ -39,10 +40,10 @@ var Button = React.createClass({
     render: function() {
         return (
             <div className="button" 
-                onMouseDown={this.toggle} 
-                onMouseUp={this.toggle}
-                onTouchStart={this.toggle}
-                onTouchEnd={this.toggle}>
+                onMouseDown={this.press} 
+                onMouseUp={this.release}
+                onTouchStart={this.press}
+                onTouchEnd={this.release}>
                 <div className="display" style={this.getStyles()}>
                     <span className="noteName">
                         {this.props.noteName}

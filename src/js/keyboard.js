@@ -2,13 +2,10 @@ var _ = require("underscore");
 var $ = require("jquery");
 var KeyCodeData = require("./data/keycodedata.js");
 var NoteCharBindingData = require("./data/notecharbindingdata.js");
+var Harmony = require("./harmony.js");
 
-var Keyboard = function(harmony) {
-	this.harmony = harmony;
-
-	// there's another binding, so just picking
-	// the first one for now
-	this.binding = NoteCharBindingData.typeA;
+var Keyboard = function() {
+	this.binding = Harmony.keyBindings;
 };
 
 var searchNote = function(binding, character) {
@@ -33,7 +30,7 @@ Keyboard.prototype.notePressHandler = function(event) {
 	var character = KeyCodeData.KeyNumberName[event.which];
 	var notePosition = searchNote(this.binding, character);
 	if(notePosition !== undefined) {
-		this.harmony.play(notePosition.noteName, notePosition.position);
+		Harmony.play(notePosition.noteName, notePosition.position);
 	}
 };
 
@@ -41,7 +38,7 @@ Keyboard.prototype.noteReleaseHandler = function(event) {
 	var character = KeyCodeData.KeyNumberName[event.which];
 	var notePosition = searchNote(this.binding, character);
 	if(notePosition !== undefined) {
-		this.harmony.stop(notePosition.noteName, notePosition.position);
+		Harmony.stop(notePosition.noteName, notePosition.position);
 	}
 };
 
@@ -49,13 +46,13 @@ Keyboard.prototype.noteReleaseHandler = function(event) {
 Keyboard.prototype.octaveSwitchHandler = function(event) {
 	var character = KeyCodeData.KeyNumberName[event.which];
 	if(event.shiftKey && character === "g") {
-		this.harmony.switchOctaveUp("left");
+		Harmony.switchOctaveUp("left");
 	} else if(character === "g") {
-		this.harmony.switchOctaveDown("left");
+		Harmony.switchOctaveDown("left");
 	} else if(event.shiftKey && character === "h") {
-		this.harmony.switchOctaveUp("right");
+		Harmony.switchOctaveUp("right");
 	} else if(character === "h") {
-		this.harmony.switchOctaveDown("right");
+		Harmony.switchOctaveDown("right");
 	}
 };
 
@@ -65,4 +62,4 @@ Keyboard.prototype.setup = function(listenToThis) {
 	listenToThis.on("keydown", _.bind(this.octaveSwitchHandler, this));
 };
 
-module.exports = Keyboard;
+module.exports = new Keyboard;
