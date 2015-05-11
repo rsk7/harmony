@@ -1,6 +1,7 @@
-var React       = require("react");
-var Harmony     = require("../harmony.js");
-var OctaveBoard = require("./octaveboard.jsx");
+var React         = require("react");
+var Harmony       = require("../harmony.js");
+var OctaveBoard   = require("./octaveboard.jsx");
+var Configuration = require("./configuration.jsx");
 
 var Board = React.createClass({
 	getInitialState: function() {
@@ -21,6 +22,7 @@ var Board = React.createClass({
 			<div>
 				<OctaveBoard octave={this.state.left}/>
 				<OctaveBoard octave={this.state.right}/>
+				<Configuration/>
 			</div>
 		);
 	},

@@ -1,6 +1,7 @@
 var _				= require("underscore");
 var Backbone        = require("backbone");
 var Sound           = require("./sound.js");
+var Colors  		= require("../data/colors.js");
 var WaveTypes       = ["sine", "sawtooth", "triangle", "square"];
 
 var zeroToOne = function(value) {
@@ -27,6 +28,7 @@ var Note = Backbone.Model.extend({
 
 	initialize: function() {
 		this.sound = new Sound();
+		this.set("onColor", Colors.randomColor());
 		this.listenTo(this, "change:note", this.updateBinding);
 		this.updateBinding();
 	},
@@ -38,7 +40,7 @@ var Note = Backbone.Model.extend({
 	},
 
 	setWaveType: function(waveType) {
-		this.sound.waveType = waveType;
+		this.sound.waveType(waveType);
 	},
 
 	setWaveTable: function(waveTable) {
