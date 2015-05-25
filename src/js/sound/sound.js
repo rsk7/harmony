@@ -21,6 +21,11 @@ var sound = function(){
     this.on = false;
 };
 
+sound.prototype.detune = function(d) {
+    this.vco.detune.setValueAtTime(d, soundContext.currentTime);
+    this.vco.detune.value = d;
+};
+
 sound.prototype.freq = function(f){
     this.vco.frequency.setValueAtTime(f, soundContext.currentTime);
     this.vco.frequency.value = f;
@@ -58,7 +63,7 @@ sound.prototype.envelopeStop = function(){
 };
 
 sound.prototype.play = function(frequency) {
-    this.freq(frequency);
+    if(frequency) this.freq(frequency);
     this.on = true;
     this.envelopeStart();
 };

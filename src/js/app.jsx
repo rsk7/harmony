@@ -3,6 +3,7 @@ var React    = require("react");
 var Keyboard = require("./keyboard.js");
 var Board    = require("./Board/board.jsx");
 var Harmony  = require("./harmony.js");
+var h = require("./h.js");
 
 var initialize = function() {
 	React.render(<Board/>, document.getElementById("harmony"));
@@ -10,6 +11,7 @@ var initialize = function() {
 
 	// for fun
 	window.harmony = Harmony;
+    window.h = h;
 };
 
 $(initialize);

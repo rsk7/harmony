@@ -135,6 +135,10 @@ var data = [
 var api = {
     get: function(options) {
         return _.where(data, options);
+    },
+
+    getNote: function(options) {
+        return _.findWhere(data, options);
     }
 };
 

@@ -33900,7 +33900,7 @@ var Board = React.createClass({displayName: "Board",
 
 module.exports = Board;
 
-},{"../harmony.js":176,"./configuration.jsx":163,"./octaveboard.jsx":164,"react":159}],162:[function(require,module,exports){
+},{"../harmony.js":178,"./configuration.jsx":163,"./octaveboard.jsx":164,"react":159}],162:[function(require,module,exports){
 var React = require("react");
 var Harmony = require("../harmony.js");
 
@@ -33967,7 +33967,7 @@ var Button = React.createClass({displayName: "Button",
 
 module.exports = Button;
 
-},{"../harmony.js":176,"react":159}],163:[function(require,module,exports){
+},{"../harmony.js":178,"react":159}],163:[function(require,module,exports){
 var React = require("react");
 var Harmony = require("../harmony.js");
 
@@ -34043,7 +34043,7 @@ var Configuration = React.createClass({displayName: "Configuration",
 
 module.exports = Configuration;
 
-},{"../harmony.js":176,"react":159}],164:[function(require,module,exports){
+},{"../harmony.js":178,"react":159}],164:[function(require,module,exports){
 var _        = require("underscore");
 var React    = require("react");
 var Button   = require("./button.jsx");
@@ -34563,6 +34563,10 @@ var data = [
 var api = {
     get: function(options) {
         return _.where(data, options);
+    },
+
+    getNote: function(options) {
+        return _.findWhere(data, options);
     }
 };
 
@@ -59199,6 +59203,7 @@ var React    = require("react");
 var Keyboard = require("./keyboard.js");
 var Board    = require("./Board/board.jsx");
 var Harmony  = require("./harmony.js");
+var h = require("./h.js");
 
 var initialize = function() {
 	React.render(React.createElement(Board, null), document.getElementById("harmony"));
@@ -59206,6 +59211,7 @@ var initialize = function() {
 
 	// for fun
 	window.harmony = Harmony;
+    window.h = h;
 };
 
 $(initialize);
@@ -59215,7 +59221,112 @@ $(initialize);
 
 
 
-},{"./Board/board.jsx":161,"./harmony.js":176,"./keyboard.js":177,"jquery":4,"react":159}],176:[function(require,module,exports){
+},{"./Board/board.jsx":161,"./h.js":177,"./harmony.js":178,"./keyboard.js":179,"jquery":4,"react":159}],176:[function(require,module,exports){
+var oscillatorTypes = {
+    "sine"     : "sine",
+    "square"   : "square",
+    "sawtooth" : "sawtooth",
+    "triangle" : "triangle",
+    "custom"   : "custom"
+};
+
+module.exports = {
+    gain: 0.25,
+    attack: 0.1,
+    release: 0.1,
+    detune: null,
+    wave: {
+        type: oscillatorTypes.sine,
+        data: null // when custom use for waveTable
+    }
+};
+
+
+
+},{}],177:[function(require,module,exports){
+// HARMOVY
+var _ = require("underscore");
+var Sound = require("./sound/sound.js");
+var NoteDictionary = require("./data/notedata.js");
+
+var activeNotes = {};
+var config = require("./h.config.js");
+
+var getNoteIds = function(noteDsl) {
+    return noteDsl.split(",").map(function(id) {
+        return id.trim();  
+    });
+};
+
+var getNote = function(noteId) {
+    var name = noteId.slice(0, -1);
+    var octave = noteId.slice(-1);
+    return NoteDictionary.getNote({
+        name: name,
+        octave: parseInt(octave)
+    });
+};
+
+var getActiveNote = function(noteId) {
+    return {noteId: noteId, note: activeNotes[noteId]};
+};
+
+var getId = function(noteData) {
+    return noteData.name + noteData.octave;
+};
+
+var playNote = function(noteData) {
+    var sound = new Sound();
+    var noteId = getId(noteData);
+    activeNotes[noteId] = sound;
+    configure(getActiveNote(noteId));
+    sound.play(noteData.frequency);
+};
+
+var stopNote = function(activeNote) {
+    if(activeNote) activeNote.note.stop();
+    delete activeNotes[activeNote.noteId];
+};
+
+var configure = function(activeNote) {
+    var sound = activeNote.note;
+    sound.amplitude = config.gain;
+    sound.attackTime = config.attack;
+    sound.releaseTime = config.release;
+    sound.detune(config.detune);
+    sound.waveType(config.wave.type);
+    if(config.wave.data) sound.setWaveTable(config.wave.data);
+};
+
+var getActiveNotes = function() {
+    return _.keys(activeNotes).map(function(key) {
+        return {noteId: key, note: activeNotes[key]};
+    });
+};
+
+var h = {
+    play: function(dsl) {
+        getNoteIds(dsl).map(getNote).forEach(playNote);
+    },
+
+    stop: function(dsl) {
+        if(dsl) getNoteIds(dsl).map(getActiveNote).forEach(stopNote);
+        else getActiveNotes().forEach(stopNote);
+    },
+
+    configure: function(options) {
+       config = _.extend(config, options);
+       getActiveNotes().forEach(configure);
+    },
+
+    activeNotes: function() {
+        return activeNotes;
+    }
+};
+
+module.exports = h;
+
+},{"./data/notedata.js":168,"./h.config.js":176,"./sound/sound.js":182,"underscore":160}],178:[function(require,module,exports){
 var _ = require("underscore");
 var Notes = require("./sound/notes.js");
 var NoteCharBindingData = require("./data/notecharbindingdata.js");
@@ -59357,7 +59468,7 @@ module.exports = new Harmony;
 
 
 
-},{"./data/notecharbindingdata.js":167,"./data/wavetables/celesta.js":169,"./data/wavetables/organ2.js":170,"./data/wavetables/piano.js":171,"./data/wavetables/warmsaw.js":172,"./data/wavetables/wurlitzer.js":173,"./data/wavetables/wurlitzer2.js":174,"./sound/notes.js":179,"underscore":160}],177:[function(require,module,exports){
+},{"./data/notecharbindingdata.js":167,"./data/wavetables/celesta.js":169,"./data/wavetables/organ2.js":170,"./data/wavetables/piano.js":171,"./data/wavetables/warmsaw.js":172,"./data/wavetables/wurlitzer.js":173,"./data/wavetables/wurlitzer2.js":174,"./sound/notes.js":181,"underscore":160}],179:[function(require,module,exports){
 var _ = require("underscore");
 var $ = require("jquery");
 var KeyCodeData = require("./data/keycodedata.js");
@@ -59424,7 +59535,7 @@ Keyboard.prototype.setup = function(listenToThis) {
 
 module.exports = new Keyboard;
 
-},{"./data/keycodedata.js":166,"./data/notecharbindingdata.js":167,"./harmony.js":176,"jquery":4,"underscore":160}],178:[function(require,module,exports){
+},{"./data/keycodedata.js":166,"./data/notecharbindingdata.js":167,"./harmony.js":178,"jquery":4,"underscore":160}],180:[function(require,module,exports){
 var _				= require("underscore");
 var Backbone        = require("backbone");
 var Sound           = require("./sound.js");
@@ -59521,7 +59632,7 @@ module.exports = Note;
 
 
 
-},{"../data/colors.js":165,"./sound.js":180,"backbone":1,"underscore":160}],179:[function(require,module,exports){
+},{"../data/colors.js":165,"./sound.js":182,"backbone":1,"underscore":160}],181:[function(require,module,exports){
 var _        = require("underscore");
 var Backbone = require("backbone");
 var Note     = require("./note.js");
@@ -59606,7 +59717,7 @@ var Notes = Backbone.Collection.extend({
 
 module.exports = Notes;
 
-},{"../data/notedata.js":168,"./note.js":178,"backbone":1,"underscore":160}],180:[function(require,module,exports){
+},{"../data/notedata.js":168,"./note.js":180,"backbone":1,"underscore":160}],182:[function(require,module,exports){
 var soundContext = (function(){
     if(typeof window.AudioContext === 'function') {
         return new window.AudioContext();
@@ -59628,6 +59739,11 @@ var sound = function(){
     this.vco.start(0);
     this.vca.connect(soundContext.destination);
     this.on = false;
+};
+
+sound.prototype.detune = function(d) {
+    this.vco.detune.setValueAtTime(d, soundContext.currentTime);
+    this.vco.detune.value = d;
 };
 
 sound.prototype.freq = function(f){
@@ -59667,7 +59783,7 @@ sound.prototype.envelopeStop = function(){
 };
 
 sound.prototype.play = function(frequency) {
-    this.freq(frequency);
+    if(frequency) this.freq(frequency);
     this.on = true;
     this.envelopeStart();
 };
