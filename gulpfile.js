@@ -3,6 +3,7 @@ var browserify = require("gulp-browserify");
 var sass = require("gulp-sass");
 var rename = require("gulp-rename");
 var livereload = require("gulp-livereload");
+var ghPages = require("gulp-gh-pages");
 
 var paths = {
   scripts: ["src/js/**/*.js", "src/js/**/*.jsx"],
@@ -11,7 +12,7 @@ var paths = {
 };
 
 gulp.task("browserify", function() {
-	gulp.src("src/js/app.jsx")
+	return gulp.src("src/js/app.jsx")
 		.pipe(browserify({
 			transform: ["reactify"],
 			extensions: [".jsx"]
@@ -22,7 +23,7 @@ gulp.task("browserify", function() {
 });
 
 gulp.task("sass", function() {
-	gulp.src("src/sass/**/*.scss")
+	return gulp.src("src/sass/**/*.scss")
 		.pipe(sass({
 			outputStyle: "compressed",
 			souceComments: "map",
@@ -33,7 +34,7 @@ gulp.task("sass", function() {
 });
 
 gulp.task("copy-static", function() {
-	gulp.src("src/index.html")
+	return gulp.src("src/index.html")
 		.pipe(gulp.dest("www"))
 		.pipe(livereload());
 });
@@ -45,4 +46,10 @@ gulp.task("watch", function() {
 	gulp.watch(paths.static, ["copy-static"]);
 });
 
+gulp.task("ghPages", function() {
+    return gulp.src("www/**/*")
+    	.pipe(ghPages());
+});
+
 gulp.task("default", ["browserify", "sass", "copy-static"]);
+gulp.task("deploy", ["default", "ghPages"]);

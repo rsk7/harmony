@@ -28,3 +28,6 @@ node_modules
 
 # build output
 www
+
+# gulp-gh-pages
+.publish
