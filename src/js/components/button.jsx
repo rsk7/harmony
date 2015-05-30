@@ -1,5 +1,6 @@
+var _ = require("underscore");
 var React = require("react");
-var Harmony = require("../harmony.js");
+var manager = require("../state/buttonmanager.js");
 
 var Button = React.createClass({
     getDefaultProps: function() {
@@ -11,16 +12,19 @@ var Button = React.createClass({
             octaveNumber: "?",
             offTextColor: "#C8C8C8",
             onTextColor: "#FFFFFF",
+            action: undefined,
             on: false
         };
     },
 
     press: function() {
-        Harmony.playByKey(this.props.keyBinding);
+        var actionData = _.find(manager.state(), {key: this.props.keyBinding});
+        manager.dispatch(actionData.action.start, actionData);
     },
 
     release: function() {
-        Harmony.stopByKey(this.props.keyBinding);
+        var actionData = _.find(manager.state(), {key: this.props.keyBinding});
+        manager.dispatch(actionData.action.stop, actionData);
     },
 
     getStyles: function() {

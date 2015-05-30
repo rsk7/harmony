@@ -1,15 +1,23 @@
 var _        = require("underscore");
 var React    = require("react");
 var Button   = require("./button.jsx");
-var NoteData = require("../data/notedata.js");
-var Colors   = require("../data/colors.js");
+
+var transformButtonData = function(button) {
+    return {
+        noteName: button.data.note,
+        keyBinding: button.key,
+        octaveNumber: button.data.octave,
+        onColor: button.onColor,
+        on: button.on
+    };
+};
 
 var OctaveBoard = React.createClass({
     getStyles: function() {
-        var onNote = this.props.octave.where({on: true});
+        var onNote = _.where(this.props.octave, {on: true});
         if(onNote.length > 0) {
             return {
-                boxShadow: "0px 2px 50px 5px " + onNote[0].get("onColor")
+                boxShadow: "0px 2px 50px 5px " + onNote[0].onColor
             };
         } else {
             return {
@@ -19,8 +27,8 @@ var OctaveBoard = React.createClass({
     },
 
     render: function() {
-        var buttons = this.props.octave.map(function(note) {
-            var buttonProps = note.getState();
+        var buttons = this.props.octave.map(function(button) {
+            var buttonProps = transformButtonData(button);
             return (
                 <Button {...buttonProps}/>
             );

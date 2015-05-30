@@ -1,10 +1,20 @@
 // HARMOVY
 var _ = require("underscore");
-var Sound = require("./sound/sound.js");
+var Sound = require("./sound.js");
 var NoteDictionary = require("./data/notedata.js");
 
 var activeNotes = {};
-var config = require("./h.config.js");
+
+var config = {
+    gain: 0.25,
+    attack: 0.1,
+    release: 0.1,
+    detune: null,
+    wave: {
+        type: "sine",
+        data: null // wavetable data
+    }
+};
 
 var getNoteIds = function(noteDsl) {
     return noteDsl.split(",").map(function(id) {
@@ -73,8 +83,16 @@ var h = {
        getActiveNotes().forEach(configure);
     },
 
+    configuration: function() {
+        return config;
+    },
+
     activeNotes: function() {
         return activeNotes;
+    },
+
+    activeNoteIds: function() {
+        return _.keys(activeNotes);
     }
 };
 

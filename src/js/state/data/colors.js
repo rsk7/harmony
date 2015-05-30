@@ -122,5 +122,6 @@ var randomColor = function(){
 
 module.exports = {
     colorList: colorList,
-    randomColor: randomColor
+    randomColor: randomColor,
+    random: randomColor
 };

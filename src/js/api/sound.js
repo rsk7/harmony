@@ -71,6 +71,8 @@ sound.prototype.play = function(frequency) {
 sound.prototype.stop = function(){
     this.on = false;
     this.envelopeStop();
+    this.vco.disconnect();
+    this.vca.disconnect();
 };
 
 module.exports = sound;

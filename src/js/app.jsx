@@ -1,17 +1,28 @@
-var $        = require("jquery");
-var React    = require("react");
-var Keyboard = require("./keyboard.js");
-var Board    = require("./Board/board.jsx");
-var Harmony  = require("./harmony.js");
-var h = require("./h.js");
+var $ = require("jquery");
+var React = require("react");
+var h = require("./api/h.js");
+var keys = require("./keyboard/keys.js");
+var player = require("./player.js");
+var Board = require("./components/board.jsx");
+
+var reactInitialize = function() {
+	React.render(<Board/>, document.getElementById("harmony"));
+};
+
+var keyboardInitialize = function() {
+	$(window).on("keyup", keys.keyup);
+	$(window).on("keydown", keys.keydown);
+};
+
+var fun = function() {
+	window.h = h;
+};
 
 var initialize = function() {
-	React.render(<Board/>, document.getElementById("harmony"));
-	Keyboard.setup($(window));
-
-	// for fun
-	window.harmony = Harmony;
-    window.h = h;
+	reactInitialize();
+	keyboardInitialize();
+	player.start();
+	fun();
 };
 
 $(initialize);

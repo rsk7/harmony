@@ -1,42 +1,44 @@
 var React = require("react");
-var Harmony = require("../harmony.js");
+var _ = require("underscore");
+var h = require("../api/h.js");
+var wavetablenames = require("../api/data/wavetablenames.js");
 
 var Configuration = React.createClass({
 	getInitialState: function() {
-		return Harmony.configuration;
+		return h.configuration();
 	},
 
 	waveTypeChange: function(e) {
-		Harmony.setWaveType(e.target.value);
-		this.setState(Harmony.configuration);
+		h.configure({ wave: { type: e.target.value, data: null }});
+		this.setState(h.configuration());
 	},
 
 	gainChange: function(e) {
-		Harmony.setGain(e.target.value / 100);
-		this.setState(Harmony.configuration);
+		h.configure({ gain: e.target.value / 100 });
+		this.setState(h.configuration());
  	},
 
  	attackChange: function(e) {
- 		Harmony.setAttackTime(e.target.value / 100);
+ 		h.configure({ attack: e.target.value / 100 });
  	},
 
  	releaseChange: function(e) {
- 		Harmony.setReleaseTime(e.target.value / 100);
+ 		h.configure({ release: e.target.value / 100 });
  	},
 
  	waveTableChange: function(e) {
- 		Harmony.setWaveTable(e.target.value);
- 		this.setState(Harmony.configuration);
+ 		h.configure({ wave: { type: "custom", data: wavetablenames[e.target.value]}});
+ 		this.setState(h.configuration());
  	},
 
 	render: function() {
-		var waveSelection = this.state.waveTypes.map(function(waveType) {
+		var waveSelection = ["sine", "square", "sawtooth", "triangle"].map(function(waveType) {
 			return (
 				<option value={waveType}>{waveType}</option>
 			);	
 		});
 
-		var waveTableSelection = this.state.waveTables.map(function(waveTable) {
+		var waveTableSelection = _.keys(wavetablenames).map(function(waveTable) {
 			return (
 				<option value={waveTable}>{waveTable}</option>
 			);

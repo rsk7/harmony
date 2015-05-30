@@ -86,11 +86,11 @@ var nameNumber = {
     'f12' : 123,
     'num_lock' : 144,
     'scroll_lock' : 145,
-    'semi_colon' : 186,
+    ';' : 186,
     'equal_sign' : 187,
-    'comma' : 188,
+    ',' : 188,
     'dash' : 189,
-    'period' : 190,
+    '.' : 190,
     'forward_slash' : 191,
     'grave_accent' : 192,
     'open_bracket' : 219,
@@ -113,5 +113,6 @@ var numberName = invertObject(nameNumber);
 
 module.exports = {
     KeyNameNumber : nameNumber,
-    KeyNumberName : numberName
+    KeyNumberName : numberName,
+    keycodes: numberName
 };
