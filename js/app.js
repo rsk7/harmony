@@ -55828,7 +55828,7 @@ var NoteDictionary = require("./data/notedata.js");
 var activeNotes = {};
 
 var config = {
-    gain: 0.25,
+    gain: 0.15,
     attack: 0.1,
     release: 0.1,
     detune: null,
