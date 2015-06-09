@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "homepage": "https://github.com/rsk7/harmony",
   "authors": [
-    "rsk"
+    ""
   ],
   "license": "MIT",
   "ignore": [
@@ -14,6 +14,13 @@
     "tests"
   ],
   "dependencies": {
+    "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#^1.0.0",
+    "iron-autogrow-textarea": "PolymerElements/iron-autogrow-textarea#^1.0.0",
+    "iron-behaviors": "PolymerElements/iron-behaviors#^1.0.0",
+    "iron-form-element-behavior": "PolymerElements/iron-form-element-behavior#^1.0.0",
+    "iron-input": "PolymerElements/iron-input#^1.0.0",
+    "iron-range-behavior": "PolymerElements/iron-range-behavior#^1.0.0",
+    "paper-input": "PolymerElements/paper-input#^1.0.0",
     "jquery": "~2.1.4",
     "paper-slider": "PolymerElements/paper-slider#^1.0.0"
   }
