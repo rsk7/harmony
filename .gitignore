@@ -31,4 +31,6 @@ www
 
 # gulp-gh-pages
 .publish
+
+# bower components
 bower_components 
