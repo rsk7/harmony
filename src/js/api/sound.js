@@ -1,16 +1,8 @@
-var soundContext = (function(){
-    if(typeof window.AudioContext === 'function') {
-        return new window.AudioContext();
-    } else if (typeof window.webkitAudioContext === 'function') {
-        return new window.webkitAudioContext();
-    } else {
-        throw new Error("Could not context audio");
-    }
-})();
+var soundContext = new (window.AudioContext || window.webkitAudioContext)();
 
 var sound = function(){
-    this.attackTime = 0.1;
-    this.releaseTime = 0.1;
+    this.attackTime = 0.75;
+    this.releaseTime = 0.75;
     this.amplitude = 0.10;
     this.vco = soundContext.createOscillator();
     this.vca = soundContext.createGain();
@@ -35,7 +27,7 @@ sound.prototype.waveType = function(waveType) {
     this.vco.type = waveType;
 };
 
-sound.prototype.setWaveTable = function(table) {
+var getWaveTableData = function(table) {
     var length = table.real.length;
     var real = new Float32Array(length);
     var imag = new Float32Array(length);
@@ -43,7 +35,11 @@ sound.prototype.setWaveTable = function(table) {
         real[i] = table.real[i];
         imag[i] = table.imag[i];
     }
-    this.vco.setPeriodicWave(soundContext.createPeriodicWave(real, imag));
+    return soundContext.createPeriodicWave(real, imag);
+};
+
+sound.prototype.setWaveTable = function(table) {
+    this.vco.setPeriodicWave(getWaveTableData(table));
 };
 
 sound.prototype.envelopeStart = function(){
@@ -54,12 +50,13 @@ sound.prototype.envelopeStart = function(){
     this.vca.gain.linearRampToValueAtTime(this.amplitude, attack);
 };
 
-sound.prototype.envelopeStop = function(){
+sound.prototype.envelopeStop = function(callback){
     var now = soundContext.currentTime;
     var release = now + this.releaseTime;
     this.vca.gain.cancelScheduledValues(now);
     this.vca.gain.setValueAtTime(this.amplitude, now);
     this.vca.gain.linearRampToValueAtTime(0, release);
+    setTimeout(callback, this.releaseTime * 1000);
 };
 
 sound.prototype.play = function(frequency) {
@@ -70,9 +67,10 @@ sound.prototype.play = function(frequency) {
 
 sound.prototype.stop = function(){
     this.on = false;
-    this.envelopeStop();
-    this.vco.disconnect();
-    this.vca.disconnect();
+    this.envelopeStop(function() {
+        this.vco.disconnect();
+        this.vca.disconnect(); 
+    }.bind(this));
 };
 
 module.exports = sound;

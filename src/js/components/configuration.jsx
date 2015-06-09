@@ -14,16 +14,18 @@ var Configuration = React.createClass({
 	},
 
 	gainChange: function(e) {
-		h.configure({ gain: e.target.value / 100 });
+		h.configure({ gain: e.target.value / 500 });
 		this.setState(h.configuration());
  	},
 
  	attackChange: function(e) {
- 		h.configure({ attack: e.target.value / 100 });
+ 		h.configure({ attack: e.target.value / 500 });
+ 		this.setState(h.configuration());
  	},
 
  	releaseChange: function(e) {
- 		h.configure({ release: e.target.value / 100 });
+ 		h.configure({ release: e.target.value / 500 });
+ 		this.setState(h.configuration());
  	},
 
  	waveTableChange: function(e) {
@@ -48,7 +50,15 @@ var Configuration = React.createClass({
 			<div className="configuration">
 				<div>
 					<label for="gain">Gain</label>
-					<input type="number" onChange={this.gainChange}/>
+					<paper-slider id="gainslider" min="10" max="1000" value="110"></paper-slider>
+				</div>
+				<div>
+					<label for="attack">Attack</label>
+					<paper-slider id="attackslider" min="10" max="1000" value="110"></paper-slider>
+				</div>
+				<div>
+					<label for="release">Release</label>
+					<paper-slider id="releaseslider" min="10" max="1000" value="110"></paper-slider>
 				</div>
 				<div className="waveType">
 					<label for="waveType">Wave Type</label>

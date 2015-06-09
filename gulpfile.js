@@ -4,6 +4,8 @@ var sass = require("gulp-sass");
 var rename = require("gulp-rename");
 var livereload = require("gulp-livereload");
 var ghPages = require("gulp-gh-pages");
+var clean = require("gulp-clean");
+var flatten = require("gulp-flatten");
 
 var paths = {
   scripts: ["src/js/**/*.js", "src/js/**/*.jsx"],
@@ -14,7 +16,7 @@ var paths = {
 gulp.task("browserify", function() {
 	return gulp.src("src/js/app.jsx")
 		.pipe(browserify({
-			transform: ["reactify"],
+			transform: ["reactify", "debowerify"],
 			extensions: [".jsx"]
 		}))
 		.pipe(rename("app.js"))
@@ -39,6 +41,12 @@ gulp.task("copy-static", function() {
 		.pipe(livereload());
 });
 
+gulp.task("bower", function() {
+	return gulp.src("bower_components/**/*")
+		.pipe(gulp.dest("www/bower_components"))
+		.pipe(livereload());
+});
+
 gulp.task("watch", function() {
 	livereload.listen();
 	gulp.watch(paths.scripts, ["browserify"]);
@@ -51,5 +59,10 @@ gulp.task("ghPages", function() {
     	.pipe(ghPages());
 });
 
-gulp.task("default", ["browserify", "sass", "copy-static"]);
+gulp.task("clean", function() {
+	return gulp.src("www", {read: false})
+		.pipe(clean());
+});
+
+gulp.task("default", ["browserify", "sass", "copy-static", "bower"]);
 gulp.task("deploy", ["default", "ghPages"]);

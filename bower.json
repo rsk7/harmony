@@ -1,0 +1,20 @@
+{
+  "name": "harmony",
+  "version": "0.0.0",
+  "homepage": "https://github.com/rsk7/harmony",
+  "authors": [
+    "rsk"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "paper-slider": "PolymerElements/paper-slider#^1.0.0"
+  }
+}
