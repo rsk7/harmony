@@ -8,16 +8,16 @@ Type drummer beats
 * http://typedrummer.com/7hpt2b
 
 ##Building
-Some global deps if you don't have it
-npm install -g bower
-npm install -g http-server
+Global dependencies
+* npm install -g bower
+* npm install -g http-server
 
 ### Steps
-cd harmony
-npm install 
-bower install
-gulp
-http-server www
+* cd harmony
+* npm install
+* bower install
+* gulp
+* http-server www
 
 
 
