@@ -54,14 +54,16 @@ gulp.task("watch", function() {
 	gulp.watch(paths.static, ["static-copy"]);
 });
 
-gulp.task("ghPages", function() {
-    return gulp.src("www/**/*")
-    	.pipe(ghPages());
-});
-
 gulp.task("clean", function() {
 	return gulp.src("www", {read: false})
 		.pipe(clean());
 });
 
 gulp.task("default", ["browserify", "sass", "static-copy", "bower-copy"]);
+
+gulp.task("ghPages", ["default"], function() {
+    return gulp.src("www/**/*")
+    	.pipe(ghPages());
+});
+
+
