@@ -3,9 +3,29 @@ var _ = require("underscore");
 var h = require("../api/h.js");
 var wavetablenames = require("../api/data/wavetablenames.js");
 
+var polymerInitialize = function() {
+	document.addEventListener("WebComponentsReady", function() {
+		document.querySelector("#gainslider").addEventListener("change", function(event) {
+			h.configure({ gain: event.target.value / 10000 });
+		});
+
+		document.querySelector("#attackslider").addEventListener("change", function(event) {
+			h.configure({ attack: event.target.value / 1000 });
+		});
+
+		document.querySelector("#releaseslider").addEventListener("change", function(event) {
+			h.configure({ release: event.target.value / 1000 });
+		});
+	});
+};
+
 var Configuration = React.createClass({
 	getInitialState: function() {
 		return h.configuration();
+	},
+
+	componentDidMount: function() {
+		polymerInitialize();
 	},
 
 	waveTypeChange: function(e) {

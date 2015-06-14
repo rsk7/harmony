@@ -28,20 +28,20 @@ gulp.task("sass", function() {
 	return gulp.src("src/sass/**/*.scss")
 		.pipe(sass({
 			outputStyle: "compressed",
-			souceComments: "map",
+			sourceComments: "map",
 			includePaths: "./sass"
 		}))
 		.pipe(gulp.dest("www/css"))
 		.pipe(livereload());
 });
 
-gulp.task("copy-static", function() {
+gulp.task("static-copy", function() {
 	return gulp.src("src/index.html")
 		.pipe(gulp.dest("www"))
 		.pipe(livereload());
 });
 
-gulp.task("bower", function() {
+gulp.task("bower-copy", function() {
 	return gulp.src("bower_components/**/*")
 		.pipe(gulp.dest("www/bower_components"))
 		.pipe(livereload());
@@ -51,7 +51,7 @@ gulp.task("watch", function() {
 	livereload.listen();
 	gulp.watch(paths.scripts, ["browserify"]);
 	gulp.watch(paths.sass, ["sass"]);
-	gulp.watch(paths.static, ["copy-static"]);
+	gulp.watch(paths.static, ["static-copy"]);
 });
 
 gulp.task("ghPages", function() {
@@ -64,5 +64,5 @@ gulp.task("clean", function() {
 		.pipe(clean());
 });
 
-gulp.task("default", ["browserify", "sass", "copy-static", "bower"]);
+gulp.task("default", ["browserify", "sass", "static-copy", "bower-copy"]);
 gulp.task("deploy", ["default", "ghPages"]);
