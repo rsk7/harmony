@@ -65,4 +65,3 @@ gulp.task("clean", function() {
 });
 
 gulp.task("default", ["browserify", "sass", "static-copy", "bower-copy"]);
-gulp.task("deploy", ["default", "ghPages"]);
