@@ -13,7 +13,12 @@ var paths = {
   static: ["src/index.html"]
 };
 
-gulp.task("browserify", function() {
+gulp.task("clean", function() {
+	return gulp.src("www", {read: false})
+		.pipe(clean());
+});
+
+gulp.task("browserify", ["clean"], function() {
 	return gulp.src("src/js/app.jsx")
 		.pipe(browserify({
 			transform: ["reactify", "debowerify"],
@@ -24,7 +29,7 @@ gulp.task("browserify", function() {
 		.pipe(livereload());
 });
 
-gulp.task("sass", function() {
+gulp.task("sass", ["clean"], function() {
 	return gulp.src("src/sass/**/*.scss")
 		.pipe(sass({
 			outputStyle: "compressed",
@@ -35,13 +40,13 @@ gulp.task("sass", function() {
 		.pipe(livereload());
 });
 
-gulp.task("static-copy", function() {
+gulp.task("static-copy", ["clean"], function() {
 	return gulp.src("src/index.html")
 		.pipe(gulp.dest("www"))
 		.pipe(livereload());
 });
 
-gulp.task("bower-copy", function() {
+gulp.task("bower-copy", ["clean"], function() {
 	return gulp.src("bower_components/**/*")
 		.pipe(gulp.dest("www/bower_components"))
 		.pipe(livereload());
@@ -52,11 +57,6 @@ gulp.task("watch", function() {
 	gulp.watch(paths.scripts, ["browserify"]);
 	gulp.watch(paths.sass, ["sass"]);
 	gulp.watch(paths.static, ["static-copy"]);
-});
-
-gulp.task("clean", function() {
-	return gulp.src("www", {read: false})
-		.pipe(clean());
 });
 
 gulp.task("default", ["browserify", "sass", "static-copy", "bower-copy"]);
