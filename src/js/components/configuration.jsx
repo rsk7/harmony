@@ -1,7 +1,7 @@
 var React = require("react");
 var _ = require("underscore");
-var h = require("../api/h.js");
-var wavetablenames = require("../api/data/wavetablenames.js");
+var h = require("h-audio");
+var wavetablenames = require("../state/data/wavetablenames.js");
 
 var polymerInitialize = function() {
 	document.addEventListener("WebComponentsReady", function() {

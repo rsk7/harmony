@@ -1,15 +1,12 @@
 var $ = require("jquery");
 var React = require("react");
-var h = require("./api/h.js");
+var h = require("h-audio");
 var keys = require("./keyboard/keys.js");
 var player = require("./player.js");
 var Board = require("./components/board.jsx");
-var Oscilloscope = require("./components/oscilloscope.jsx");
-// var analyser = require("./api/analyser.js");
 
 var reactInitialize = function() {
 	React.render(<Board/>, document.getElementById("harmony"));
-	// React.render(<Oscilloscope/>, document.getElementById("harmony"));
 };
 
 var keyboardInitialize = function() {
