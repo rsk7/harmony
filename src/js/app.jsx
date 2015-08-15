@@ -1,8 +1,8 @@
 var $ = require("jquery");
-var React = require("react");
 var h = require("h-audio");
-var keys = require("./keyboard/keys.js");
+var React = require("react");
 var player = require("./player.js");
+var keys = require("./keyboard/keys.js");
 var Board = require("./components/board.jsx");
 
 var reactInitialize = function() {

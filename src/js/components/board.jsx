@@ -1,5 +1,5 @@
-var _ = require("underscore");
 var React = require("react");
+var _ = require("underscore");
 var manager = require("../state/buttonmanager.js");
 var OctaveBoard   = require("./octaveboard.jsx");
 var Configuration = require("./configuration.jsx");

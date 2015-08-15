@@ -1,5 +1,5 @@
-var _ = require("underscore");
 var h = require("h-audio");
+var _ = require("underscore");
 var manager = require("./state/buttonmanager.js");
 
 var startNotes = function(notesToStart) {

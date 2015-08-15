@@ -1,8 +1,8 @@
 var _ = require("underscore");
 var assign = require("object-assign");
-var emitter = require("events").EventEmitter;
 var map = require("./data/buttonmap.js");
 var colors = require("./data/colors.js");
+var emitter = require("events").EventEmitter;
 
 // setting generated attributes
 var initialize = _.once(function() {

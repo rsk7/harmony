@@ -10,8 +10,11 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "src",
+    ".travis.yml",
+    "gulpfile.js",
+    "package.json",
+    "README.md"
   ],
   "dependencies": {
     "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#^1.0.0",

@@ -1,6 +1,6 @@
-var _        = require("underscore");
-var React    = require("react");
-var Button   = require("./button.jsx");
+var React = require("react");
+var _ = require("underscore");
+var Button = require("./button.jsx");
 
 var transformButtonData = function(button) {
     return {
