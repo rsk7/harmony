@@ -21,7 +21,7 @@ var polymerInitialize = function() {
 
 var Configuration = React.createClass({
 	getInitialState: function() {
-		return h.configuration();
+		return h.configuration;
 	},
 
 	componentDidMount: function() {
@@ -30,27 +30,27 @@ var Configuration = React.createClass({
 
 	waveTypeChange: function(e) {
 		h.configure({ wave: { type: e.target.value, data: null }});
-		this.setState(h.configuration());
+		this.setState(h.configuration);
 	},
 
 	gainChange: function(e) {
 		h.configure({ gain: e.target.value / 500 });
-		this.setState(h.configuration());
+		this.setState(h.configuration);
  	},
 
  	attackChange: function(e) {
  		h.configure({ attack: e.target.value / 500 });
- 		this.setState(h.configuration());
+ 		this.setState(h.configuration);
  	},
 
  	releaseChange: function(e) {
  		h.configure({ release: e.target.value / 500 });
- 		this.setState(h.configuration());
+ 		this.setState(h.configuration);
  	},
 
  	waveTableChange: function(e) {
- 		h.configure({ wave: { type: "custom", data: wavetablenames[e.target.value]}});
- 		this.setState(h.configuration());
+ 		h.configure({ wave: { data: wavetablenames[e.target.value]}});
+ 		this.setState(h.configuration);
  	},
 
 	render: function() {

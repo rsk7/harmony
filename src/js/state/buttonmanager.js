@@ -1,4 +1,5 @@
 var _ = require("underscore");
+var p2p = require("../p2p.js");
 var assign = require("object-assign");
 var map = require("./data/buttonmap.js");
 var colors = require("./data/colors.js");
@@ -13,11 +14,17 @@ var initialize = _.once(function() {
 	});
 });
 
-var playNote = function(noteRow) {
+var playNote = function(data) {
+    var noteRow = map.find(function(note) {
+        return note.key === data.key;
+    });
 	noteRow.on = true;
 };
 
-var stopNote = function(noteRow) {
+var stopNote = function(data) {
+    var noteRow = map.find(function(note) {
+        return note.key === data.key;
+    });
 	delete noteRow.on;
 };
 
@@ -63,7 +70,13 @@ var ButtonManager = assign({}, emitter.prototype, {
 	}
 });
 
-ButtonManager.dispatch = function(actionName, data) {
+p2p.addReceiver(function(msg) {
+    if(msg.type === "button-dispatch") {
+        dispatch(msg.actionName, msg.data);
+    }
+});
+
+var dispatch = function(actionName, data) {
 	var ACTION_MAP = {
 		"play-note": playNote,
 		"stop-note": stopNote,
@@ -73,6 +86,17 @@ ButtonManager.dispatch = function(actionName, data) {
 
 	ACTION_MAP[actionName](data);
 	ButtonManager.emitChange();
+};
+
+
+ButtonManager.dispatch = function(actionName, data) {
+    p2p.send({
+        type: "button-dispatch",
+        actionName: actionName,
+        data: data
+    });
+
+    dispatch(actionName, data);
 };
 
 module.exports = ButtonManager;
